@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0.5,
+    borderWidth: 2,
     borderColor: 'gray',
   },
 });

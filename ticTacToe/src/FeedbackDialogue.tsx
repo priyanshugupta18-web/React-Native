@@ -1,16 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import useData from '../contexts/contexts';
 
 export default function NewGame() {
-  const {winner} = useData();
+  const { winner } = useData();
   return (
     <View style={[styles.container, StyleSheet.absoluteFill]}>
       <View style={styles.cardLayout}>
-        <View><Text style={{...styles.text, fontSize: 24, marginBottom: 20, fontWeight: 500}}>🎮 Game Over!</Text><Text style={{...styles.text, fontSize: 18, fontWeight: "500"}}> {winner.winner} wins 🥳!</Text></View>
-        <View style={styles.button}><Text style={[styles.btnText, {textTransform:'uppercase'}]}>new game</Text></View>
-      </View>
+        <View><Text style={{ ...styles.text, fontSize: 24, marginBottom: 20, fontWeight: 500 }}>🎮 Game Over!</Text><Text style={{ ...styles.text, fontSize: 18, fontWeight: "500" }}> {winner.winner} wins 🥳!</Text></View>
+        <Pressable style={({ pressed }) => [styles.button, pressed && { transform: [ {translateY: 2}] }]}><Text style={[styles.btnText, { textTransform: 'uppercase' }]}>new game</Text></Pressable>
     </View>
+    </View >
   )
 }
 
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
     zIndex: 50,
   },
   cardLayout: {
@@ -36,13 +36,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: 260,
     paddingVertical: 10,
-    display:"flex",
-    justifyContent:"center",
-    alignItems:"center"
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   },
   btnText: {
-    letterSpacing:1,
-    fontWeight:"600",
+    letterSpacing: 1,
+    fontWeight: "600",
     color: "white",
   },
   text: {
