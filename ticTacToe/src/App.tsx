@@ -11,8 +11,9 @@ import React, { useEffect } from 'react';
 import UserDialogue from './UserDialogue';
 import FeedbackDialogue from './FeedbackDialogue';
 import useData, { DataProvider } from '../contexts/contexts';
-import Box from './Box';
 import { Shuffle, CircleUserRound, Zap } from 'lucide-react-native';
+import Box from './Box';
+import DrawFeedback from './DrawFeedback';
 
 export default function App() {
   const [players, setPlayers] = React.useState({
@@ -23,24 +24,29 @@ export default function App() {
     winner: '',
   });
   const [patterns, setPatterns] = React.useState({
-    box1: 'box1',
-    box2: 'box2',
-    box3: 'box3',
-    box4: 'box4',
-    box5: 'box5',
-    box6: 'box6',
-    box7: 'box7',
-    box8: 'box8',
-    box9: 'box9',
+    box1: { pressed: false, turn: '' },
+    box2: { pressed: false, turn: '' },
+    box3: { pressed: false, turn: '' },
+    box4: { pressed: false, turn: '' },
+    box5: { pressed: false, turn: '' },
+    box6: { pressed: false, turn: '' },
+    box7: { pressed: false, turn: '' },
+    box8: { pressed: false, turn: '' },
+    box9: { pressed: false, turn: '' },
   });
   const [turn, setTurn] = React.useState('');
   const [draw, setDraw] = React.useState<boolean | null>(false);
+  const [isEmpty, setIsEmpty] = React.useState(true);
 
   useEffect(() => {
     if (players.player1) {
       setTurn(players.player1);
     }
   }, [players]);
+
+  useEffect(() => {
+    setIsEmpty(Object.values(patterns).every(Pattern => !Pattern.pressed));
+  }, [patterns]);
 
   useEffect(() => {
     const winningPatterns = [
@@ -59,13 +65,13 @@ export default function App() {
       const b2 = Object.values(patterns)[pattern[1]];
       const b3 = Object.values(patterns)[pattern[2]];
 
-      if (b1 === b2 && b2 === b3) {
-        setWinner({ winner: b1 });
+      if (b1.turn === b2.turn && b2.turn === b3.turn && b1.turn !== '') {
+        setWinner({ winner: b1.turn });
       }
     });
     function avail() {
       return Object.values(patterns).every(pattern => {
-        pattern !== '';
+        return pattern.pressed;
       });
     }
     if (winner.winner === '' && avail()) {
@@ -94,17 +100,31 @@ export default function App() {
           <SafeAreaView style={[styles.container, { height }]}>
             {players.player1 == '' && players.player2 == '' && <UserDialogue />}
             {winner.winner !== '' && <FeedbackDialogue />}
+            {draw === true && <DrawFeedback />}
             <View style={styles.navLayout}>
-              <Pressable>
-                <CircleUserRound color="black" size={30} />
+              <Pressable disabled={!isEmpty} onPress={() => {
+                setPlayers({
+                  player1: "",
+                  player2: "",
+                });
+              }}>
+                <CircleUserRound color={isEmpty?"black":"gray"} size={30} />
               </Pressable>
               <View>
                 <Text style={{ fontSize: 24, fontWeight: '600' }}>
                   𝑇𝑖𝑐𝑇𝑎𝑐𝑇𝑜𝑒
                 </Text>
               </View>
-              <Pressable>
-                <Shuffle color="black" size={30} />
+              <Pressable
+                disabled={!isEmpty}
+                onPress={() => {
+                  setPlayers(prev => ({
+                    player1: prev.player2,
+                    player2: prev.player1,
+                  }));
+                }}
+              >
+                <Shuffle color={isEmpty?"black":"gray"} size={30} />
               </Pressable>
             </View>
             <View
@@ -127,15 +147,20 @@ export default function App() {
                   elevation: 5,
                 }}
               >
-                <View style={{ width: 100, height: 25 }}>
+                <View
+                  style={{
+                    width: 100,
+                    height: 25,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Text
                     style={{
                       textTransform: 'uppercase',
                       fontSize: 18,
                       fontWeight: '500',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
                     }}
                   >
                     {players.player1 || 'Player 1'}
@@ -144,15 +169,20 @@ export default function App() {
                 <View>
                   <Zap color="#0c54f2" size={30} />
                 </View>
-                <View style={{ width: 100, height: 25 }}>
+                <View
+                  style={{
+                    width: 100,
+                    height: 25,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Text
                     style={{
                       textTransform: 'uppercase',
                       fontSize: 18,
                       fontWeight: '500',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
                     }}
                   >
                     {players.player2 || 'Player 2'}
@@ -218,6 +248,20 @@ export default function App() {
               }}
             >
               <Pressable
+                onPress={() => {
+                  setTurn(players.player1);
+                  setPatterns({
+                    box1: { pressed: false, turn: '' },
+                    box2: { pressed: false, turn: '' },
+                    box3: { pressed: false, turn: '' },
+                    box4: { pressed: false, turn: '' },
+                    box5: { pressed: false, turn: '' },
+                    box6: { pressed: false, turn: '' },
+                    box7: { pressed: false, turn: '' },
+                    box8: { pressed: false, turn: '' },
+                    box9: { pressed: false, turn: '' },
+                  });
+                }}
                 style={({ pressed }) => [
                   {
                     backgroundColor: '#0c54f2',

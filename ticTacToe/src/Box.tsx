@@ -3,18 +3,21 @@ import React from 'react';
 import useData from '../contexts/contexts';
 import { X } from 'lucide-react-native';
 import { Circle } from 'lucide-react-native';
+import { object } from 'yup';
+
 export default function Box({ name }: { name: string }) {
-  let { turn, setTurn, players, setPatterns} = useData();
-  const [localTurn, setLocalTurn] = React.useState('');
-  const [pressedOnce, setPressedOnce] = React.useState(false);
+  let { turn, setTurn, players, setPatterns, patterns, setWinner } = useData();
+
+  // Logical Blunder realisde later😅:-
+  // const [localTurn, setLocalTurn] = React.useState('');
+  // const [pressedOnce, setPressedOnce] = React.useState(false);
+
   return (
     <Pressable
       style={styles.container}
-      disabled={pressedOnce}
+      disabled={patterns[name as keyof typeof patterns].pressed}
       onPress={() => {
-        setPatterns(prev => ({...prev, [name]: turn}))
-        setLocalTurn(turn);
-        setPressedOnce(true);
+        setPatterns({...patterns, [name] : {pressed: true, turn: turn}});
         setTurn(prev => {
           if (prev === players.player1) {
             return players.player2;
@@ -26,7 +29,7 @@ export default function Box({ name }: { name: string }) {
     >
       <View
         style={
-          localTurn === players.player1 && localTurn !== ''
+          patterns[name as keyof typeof patterns].turn === players.player1 && patterns[name as keyof typeof patterns].turn !== ''
             ? { display: 'flex' }
             : { display: 'none' }
         }
@@ -35,7 +38,7 @@ export default function Box({ name }: { name: string }) {
       </View>
       <View
         style={
-          localTurn !== players.player1 && localTurn !== ''
+          patterns[name as keyof typeof patterns].turn !== players.player1 && patterns[name as keyof typeof patterns].turn !== ''
             ? { display: 'flex' }
             : { display: 'none' }
         }

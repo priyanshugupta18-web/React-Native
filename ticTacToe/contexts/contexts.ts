@@ -9,16 +9,21 @@ type Winner = {
   winner: string;
 };
 
+type Box = {
+  pressed: boolean,
+  turn: string,
+}
+
 type Patterns = {
-  box1: string;
-  box2: string;
-  box3: string;
-  box4: string;
-  box5: string;
-  box6: string;
-  box7: string;
-  box8: string;
-  box9: string;
+  box1: Box;
+  box2: Box;
+  box3: Box;
+  box4: Box;
+  box5: Box;
+  box6: Box;
+  box7: Box;
+  box8: Box;
+  box9: Box;
 };
 
 type DataContextType = {
@@ -31,15 +36,15 @@ type DataContextType = {
   patterns: Patterns;
   setPatterns: React.Dispatch<
     React.SetStateAction<{
-      box1: string;
-      box2: string;
-      box3: string;
-      box4: string;
-      box5: string;
-      box6: string;
-      box7: string;
-      box8: string;
-      box9: string;
+      box1: {pressed: boolean, turn: string};
+      box2: {pressed: boolean, turn: string};
+      box3: {pressed: boolean, turn: string};
+      box4: {pressed: boolean, turn: string};
+      box5: {pressed: boolean, turn: string};
+      box6: {pressed: boolean, turn: string};
+      box7: {pressed: boolean, turn: string};
+      box8: {pressed: boolean, turn: string};
+      box9: {pressed: boolean, turn: string};
     }>
   >;
   draw: boolean | null;
@@ -54,15 +59,15 @@ const data = createContext<DataContextType>({
   winner: { winner: '' },
   setWinner: () => {},
   patterns: {
-    box1: '',
-    box2: '',
-    box3: '',
-    box4: '',
-    box5: '',
-    box6: '',
-    box7: '',
-    box8: '',
-    box9: '',
+      box1: {pressed: false, turn: ""},
+      box2: {pressed: false, turn: ""},
+      box3: {pressed: false, turn: ""},
+      box4: {pressed: false, turn: ""},
+      box5: {pressed: false, turn: ""},
+      box6: {pressed: false, turn: ""},
+      box7: {pressed: false, turn: ""},
+      box8: {pressed: false, turn: ""},
+      box9: {pressed: false, turn: ""},
   },
   setPatterns: () => {},
   draw: null,
